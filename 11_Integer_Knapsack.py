@@ -31,3 +31,7 @@ for v in prob.variables():
 # Print the selected items
 selected_items = [i+1 for i in range(len(values)) if x[i].varValue == 1]
 print(f"Selected items: {selected_items}")
+
+# Print the total weight of the selected items
+total_weight = sum(weights[i] for i in range(len(values)) if x[i].varValue == 1)
+print(f"Total weight of selected items: {total_weight}")

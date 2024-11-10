@@ -6,6 +6,7 @@ prob = LpProblem("Office_Assignment", LpMinimize)
 
 # Define the values that each employee gives to each office,
 # higher values indicate a worst fit
+# 14 employees and 10 offices
 values = [
     [1, 9, 3, 3, 4, 9, 8, 5, 8, 10],
     [8, 3, 9, 7, 3, 10, 10, 9, 1, 4],
@@ -27,19 +28,31 @@ num_employees = len(values)
 num_offices = len(values[0])
 
 # Define the binary variables for each employee-office combination
-x = [[LpVariable(f"x_{i+1}_{j+1}", cat='Binary') for j in range(num_offices)] for i in range(num_employees)]
+x = []
+for employee in range(num_employees):
+    row = []
+    for office in range(num_offices):
+        row.append(LpVariable(f"x_{employee+1}_{office+1}", cat='Binary'))
+    x.append(row)
 
 # Define the objective function: minimize the total value of the assignments
-prob += lpSum(values[i][j] * x[i][j] for i in range(num_employees) for j in range(num_offices)), "Total Value"
+objective_function = 0
+for employee in range(num_employees):
+    for office in range(num_offices):
+        objective_function += values[employee][office] * x[employee][office]
+prob += objective_function, "Total Value"
 
 # Add constraints to ensure each employee is assigned to exactly one office, row-wise
-for i in range(num_employees):
-    prob += lpSum(x[i][j] for j in range(num_offices)) == 1, f"Employee_{i+1}_assignment"
+for employee in range(num_employees):
+    constraint = 0
+    for office in range(num_offices):
+        constraint += x[employee][office]
+    prob += constraint == 1, f"Employee_{employee+1}_assignment"
 
 # Add constraints to ensure each office has at most one employee, column-wise
-for j in range(num_offices):
-    prob += lpSum(x[i][j] for i in range(num_employees)) <= 2, f"Office_{j+1}_Maxcapacity"
-    prob += lpSum(x[i][j] for i in range(num_employees)) >= 1, f"Office_{j+1}_Mincapacity"
+for office in range(num_offices):
+    prob += lpSum(x[employee][office] for employee in range(num_employees)) <= 2, f"Office_{office+1}_Maxcapacity"
+    prob += lpSum(x[employee][office] for employee in range(num_employees)) >= 1, f"Office_{office+1}_Mincapacity"
 
 # Solve the problem with detailed logging
 prob.solve()
@@ -50,20 +63,20 @@ print(f"Total value of assignments: {prob.objective.value()}")
 
 # Print the assignments
 assignments = []
-for i in range(num_employees):
-    for j in range(num_offices):
-        if x[i][j].varValue == 1:
-            assignments.append((i+1, j+1))
-            print(f"Employee {i+1} is assigned to Office {j+1}")
+for employee in range(num_employees):
+    for office in range(num_offices):
+        if x[employee][office].varValue == 1:
+            assignments.append((employee+1, office+1))
+            print(f"Employee {employee+1} is assigned to Office {office+1}")
 
 print(f"Assignments: {assignments}")
 
 # Create a table for the assignments
-table = [["Employee/Office"] + [f"Office {j+1}" for j in range(num_offices)]]
-for i in range(num_employees):
-    row = [f"Employee {i+1}"]
-    for j in range(num_offices):
-        if x[i][j].varValue == 1:
+table = [["Employee/Office"] + [f"Office {office+1}" for office in range(num_offices)]]
+for employee in range(num_employees):
+    row = [f"Employee {employee+1}"]
+    for office in range(num_offices):
+        if x[employee][office].varValue == 1:
             row.append("X")
         else:
             row.append("")

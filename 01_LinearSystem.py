@@ -11,7 +11,7 @@ z = LpVariable("z")
 # Define the objective function
 prob += 0, "Dummy Objective Function"
 
-# Define the constraints based on the system equations
+# Simulate an equation system using >= and <=
 prob += 3 * x + 3 * z + y >= 0
 prob += 2 * z - 3 * y >= 8
 prob += 8 * x + 12 * y - z >= 2

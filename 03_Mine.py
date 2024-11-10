@@ -14,19 +14,18 @@ prob = LpProblem("Minimization", LpMinimize)
 # Define the variables
 # define the 6 variables with LpVariable
 # constraint that all are non-negative
-x1_1 = LpVariable("X1_1", lowBound=0)
-x1_2 = LpVariable("X1_2", lowBound=0)
-x1_3 = LpVariable("X1_3", lowBound=0)
-x2_1 = LpVariable("X2_1", lowBound=0)
-x2_2 = LpVariable("X2_2", lowBound=0)
-x2_3 = LpVariable("X2_3", lowBound=0)
+Mine1Transp1 = LpVariable("Mine1Transp1", lowBound=0)
+Mine1Transp2 = LpVariable("Mine1Transp2", lowBound=0)
+Mine1Transp3 = LpVariable("Mine1Transp3", lowBound=0)
+Mine2Transp1 = LpVariable("Mine2Transp1", lowBound=0)
+Mine2Transp2 = LpVariable("Mine2Transp2", lowBound=0)
+Mine2Transp3 = LpVariable("Mine2Transp3", lowBound=0)
 
 # Define the costs of the activities
 activities = {
-    x1_1: 11, x1_2: 8, x1_3: 2, x2_1: 7, 
-    x2_2: 5, x2_3: 4, 
+    Mine1Transp1: 11, Mine1Transp2: 8, Mine1Transp3: 2, 
+    Mine2Transp1: 7, Mine2Transp2: 5, Mine2Transp3: 4, 
 }
-
 
 MaximumFirstMine = 800
 MaximumSecondMine = 300
@@ -39,16 +38,14 @@ MaximumTransportThirdPlant = 200
 prob += lpSum([activities[act] * act for act in activities]), "Objective Function"
 
 # Add the constraints
-# here I do not include their coefficients, the cost does not affect transport constraints
 # mines must respect production limits
-
-prob += x1_1 + x2_1 <= MaximumFirstMine
-prob += x1_2 + x2_2 <= MaximumSecondMine
+prob += Mine1Transp1 + Mine1Transp2 + Mine1Transp3 <= MaximumFirstMine
+prob += Mine2Transp1 + Mine2Transp2 + Mine2Transp3 <= MaximumSecondMine
 
 # plants must respect the demand
-prob += x1_1 + x1_2 + x1_3 == MaximumTransportFirstPlant
-prob += x2_1 + x2_2 + x2_3 == MaximumTransportSecondPlant
-prob += x1_3 + x2_3 == MaximumTransportThirdPlant
+prob += Mine1Transp1 + Mine2Transp1 == MaximumTransportFirstPlant
+prob += Mine1Transp2 + Mine2Transp2 == MaximumTransportSecondPlant
+prob += Mine1Transp3 + Mine2Transp3 == MaximumTransportThirdPlant
 
 # Solve the problem
 prob.solve()
