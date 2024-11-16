@@ -50,7 +50,7 @@ prob += WoodA * A + WoodB * B + WoodC * C <= maxWood, "Wood"
 
 
 #if i produce an object, i have to rent the tools, so if on the left side of the constraint 
-# i have a number different from 0, Y_A must be 1
+# i have a number different from 0, Y_A must be 1, using multiplication because A is a LpVariable and not a number
 prob += A * (1 / M_A) <= Y_A, "Rent A" 
 prob += B * (1 / M_B) <= Y_B, "Rent B"
 prob += C * (1 / M_C) <= Y_C, "Rent C"
