@@ -41,13 +41,10 @@ prob += lpSum([node_weights[i] * x[i] for i in graph]), "Maximize Weighted Cliqu
 
 # Constraint 1: two unconected nodes cannot be both in the clique
 for node in graph:
-    all_nodes = set(graph.keys())
-    all_nodes.remove(node)
-    for adjacent in graph[node]:
-        if adjacent in all_nodes:
-            all_nodes.remove(adjacent)
-    for othernode in all_nodes:
-        prob += x[node] + x[othernode] <= 1, f"Adjacent_{node}_{othernode}"
+    for othernode in graph:
+        if node != othernode and othernode not in graph[node]:
+            prob += x[node] + x[othernode] <= 1, f"NonAdjacent_{node}_{othernode}"
+
 
 # Solve the problem
 prob.solve()
