@@ -65,3 +65,20 @@ for i in graph:
 # Print the total number of colors used
 total_colors_used = sum(y[j].varValue for j in colors)
 print(f"Total number of colors used: {int(total_colors_used)}")
+
+
+
+
+'''
+Definition of the chromatic number (χ(G)):  
+    It is the minimum number of colors required to color the vertices of a graph G such that no two adjacent vertices share the same color.
+
+Definition of a clique:  
+    A clique is a complete subgraph, i.e., a set of vertices where every pair of vertices is connected by an edge.
+
+Relationship between the chromatic number and the maximum clique:  
+    If a graph G contains a clique of k vertices, each vertex in the clique must necessarily have a different color, as they are all connected to each other. Therefore:  
+    χ(G) ≥ size of the maximum clique = ω(G)  
+    Where ω(G) is the size of the maximum clique.
+
+'''
