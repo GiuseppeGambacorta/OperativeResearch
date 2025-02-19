@@ -10,7 +10,7 @@ pip install -r requirements.txt
 ```
 
 ## Exercise Results
-The results of the exercises have been tested, but they should not be trusted 100%. Please verify independently before using them in critical applications.
+The results of the exercises have been tested, but they should not be trusted 100%. It is recommended to verify them while studying, comparing with the exercise results seen in class.
 
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
